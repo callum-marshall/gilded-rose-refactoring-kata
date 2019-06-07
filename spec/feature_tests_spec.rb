@@ -55,4 +55,35 @@ describe 'Feature Tests' do
     end
   end
 
+  context "updating quality for a Conjured item" do
+    it "correctly updates quality after over time" do
+      conjured_item = [Item.new(name="Conjured item", sell_in=5, quality=30)]
+      gilded_rose = GildedRose.new(conjured_item)
+      gilded_rose.update_quality()
+      expect(conjured_item[0].to_s).to eq "Conjured item, 4, 28"
+      3.times {gilded_rose.update_quality()}
+      expect(conjured_item[0].to_s).to eq "Conjured item, 1, 22"
+    end
+  end
+
+  context "updating quality beyond the limits" do
+    it "doesn't let item quality go above 50" do
+      aged_brie = [Item.new(name="Aged Brie", sell_in=0, quality=47)]
+      gilded_rose = GildedRose.new(aged_brie)
+      gilded_rose.update_quality()
+      expect(aged_brie[0].to_s).to eq "Aged Brie, -1, 49"
+      gilded_rose.update_quality()
+      expect(aged_brie[0].to_s).to eq "Aged Brie, -2, 50"
+    end
+    it "doesn't let item quality go below 0" do
+      conjured_item = [Item.new(name="Conjured item", sell_in=10, quality=2)]
+      gilded_rose = GildedRose.new(conjured_item)
+      gilded_rose.update_quality()
+      expect(conjured_item[0].to_s).to eq "Conjured item, 9, 0"
+      3.times {gilded_rose.update_quality()}
+      expect(conjured_item[0].to_s).to eq "Conjured item, 6, 0"
+    end
+  end
+
+
 end

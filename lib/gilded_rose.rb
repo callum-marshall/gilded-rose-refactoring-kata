@@ -32,17 +32,30 @@ class GildedRose
     item.quality -= 1
   end
 
-  def max_quality(item)
+  def conjured(item)
+    item.sell_in -= 1
+    item.quality -= 2
+  end
+
+  def limits(item)
     item.quality = 50 if item.quality > 50
+    item.quality = 0 if item.quality < 0
   end
 
   def update_quality()
     @items.each do |item|
       return if item.name.include?("Sulfuras")
-      aged_brie(item) if item.name.include?("Brie")
-      backstage_pass(item) if item.name.include?("Backstage")
-      regular(item) unless item.name.include?("Brie") || item.name.include?("Backstage")
-      max_quality(item)
+      case
+      when item.name.include?("Conjured")
+        conjured(item)
+      when item.name.include?("Brie")
+        aged_brie(item)
+      when item.name.include?("Backstage")
+        backstage_pass(item)
+      else
+        regular(item)
+      end
+      limits(item)
     end
   end
 end
