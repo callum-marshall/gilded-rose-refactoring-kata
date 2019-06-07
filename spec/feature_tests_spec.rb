@@ -54,4 +54,5 @@ describe 'Feature Tests' do
       expect(backstage_pass[0].to_s).to eq "Backstage passes to a TAFKAL80ETC concert, -1, 0"
     end
   end
+
 end
